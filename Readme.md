@@ -158,3 +158,82 @@ map(distance, 5, 100, 255, 0)
 - 標準版搜尋"DHT sensor library"
 
 
+## 基本設定
+```cpp
+#include "DHT.h"              // 引入DHT函式庫
+#define DHTPIN 4              // 設定DHT11的數據腳位為4
+#define DHTTYPE DHT11         // 指定使用的感測器類型為DHT11
+
+DHT dht(DHTPIN, DHTTYPE);    // 建立DHT物件
+```
+
+## 初始化設定
+```cpp
+void setup() {
+  Serial.begin(9600);         // 啟動串列通訊，設定鮑率9600
+  Serial.println("DHT11 test!"); // 輸出測試訊息
+  dht.begin();               // 初始化DHT感測器
+}
+```
+
+## 主要運作邏輯
+```cpp
+void loop() {
+  delay(2000);  // 延遲2秒，DHT11需要至少2秒的測量間隔
+  
+  // 讀取濕度和溫度數據
+  float h = dht.readHumidity();     // 讀取濕度
+  float t = dht.readTemperature();  // 讀取溫度（攝氏）
+  
+  // 檢查讀取是否成功
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+  
+  // 輸出測量結果
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print("% Temperature: ");
+  Serial.print(t);
+  Serial.println("°C");
+}
+```
+
+## 功能說明
+
+**感測器讀取**
+- `dht.readHumidity()`：讀取濕度值（範圍：20-90%）
+- `dht.readTemperature()`：讀取溫度值（範圍：0-50°C）
+
+**錯誤檢查**
+- 使用`isnan()`函數檢查讀取值是否有效
+- 如果讀取失敗，會顯示錯誤訊息
+
+**輸出格式**
+- 每2秒更新一次數據
+- 顯示格式例如：
+  ```
+  Humidity: 45.00% Temperature: 25.00°C
+  ```
+
+## 注意事項
+
+1. DHT11的測量限制：
+   - 溫度測量範圍：0-50°C
+   - 濕度測量範圍：20-90%
+   - 精確度：溫度±2°C，濕度±5%
+
+2. 讀取間隔：
+   - 必須至少等待2秒才能進行下一次讀取
+   - 讀取過於頻繁可能導致數據不準確
+
+3. 接線方式：
+   - 數據腳接到Pin 4
+   - 需要接上適當的上拉電阻
+   - 供電電壓：3.3V-5V
+
+4. 可能的問題排除：
+   - 如果持續讀取失敗，檢查接線
+   - 確認供電電壓是否穩定
+   - 檢查上拉電阻是否正確
