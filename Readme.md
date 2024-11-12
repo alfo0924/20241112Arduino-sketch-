@@ -118,3 +118,7 @@ map(distance, 5, 100, 255, 0)
   
 
 # sketch_nov12b.ino
+###  install DHT sensor library ver:1.4.6
+###  install DHT sensor library for ESPx ver:1.19.0
+
+
