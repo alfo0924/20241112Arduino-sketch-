@@ -1,58 +1,68 @@
+# sketch_nov12a.ino 
+### 結合超音波感測器和LED漸變效果
 
-# sketch_nov12a.ino
+## 硬體配置
+**感測器接腳**
+- TrigPin（腳位17）：超音波發射觸發腳
+- EchoPin（腳位16）：超音波接收回波腳
 
-## 硬體設定
-- 使用了兩個腳位：
-  - TrigPin（腳位17）: 觸發信號輸出
-  - EchoPin（腳位16）: 回波信號輸入
+**LED接腳**
+- greenLED（腳位4）：綠色LED
+- redLED（腳位0）：紅色LED
 
-## 程式結構分析
+## 常數設定
+```cpp
+const int MIN_DISTANCE = 5;    // 最小測量距離5公分
+const int MAX_DISTANCE = 100;  // 最大測量距離100公分
+```
 
-**設定階段 (setup)**
+## 程式功能區塊
+
+**初始化設定**
 ```cpp
 void setup() {
-    pinMode(TrigPin, OUTPUT);    // 設定觸發腳為輸出模式
-    pinMode(EchoPin, INPUT);     // 設定回波腳為輸入模式
-    Serial.begin(9600);          // 初始化串口通訊，設定鮑率為9600
+    pinMode(TrigPin, OUTPUT);    // 設定超音波觸發腳為輸出
+    pinMode(EchoPin, INPUT);     // 設定超音波接收腳為輸入
+    pinMode(greenLED, OUTPUT);   // 設定綠色LED腳位為輸出
+    pinMode(redLED, OUTPUT);     // 設定紅色LED腳位為輸出
+    Serial.begin(9600);          // 啟動串口通訊
 }
 ```
 
-**主要循環 (loop)**
+**主要運作邏輯**
 ```cpp
 void loop() {
-    unsigned long distance = ping()/58;  // 計算距離（公分）
-    Serial.print(distance);              // 輸出距離數值
-    Serial.println("cm");                // 輸出單位
-    delay(100);                          // 延遲100毫秒
-}
+    // 測量距離並轉換為公分
+    unsigned long distance = ping()/58;
+    
+    // 將距離映射為LED亮度
+    int redBrightness = map(distance, MIN_DISTANCE, MAX_DISTANCE, 255, 0);
+    int greenBrightness = map(distance, MIN_DISTANCE, MAX_DISTANCE, 0, 255);
 ```
 
-**測距函數 (ping)**
-```cpp
-unsigned long ping() {
-    digitalWrite(TrigPin, LOW);      // 先將觸發腳位設為低電位
-    delayMicroseconds(5);            // 等待5微秒
-    digitalWrite(TrigPin, HIGH);     // 發送10微秒的高電位脈衝
-    delayMicroseconds(10);
-    digitalWrite(TrigPin, LOW);      // 將觸發腳位恢復低電位
-    return pulseIn(EchoPin, HIGH);   // 測量回波時間
-}
-```
+## 運作原理
 
-## 工作原理
+**距離測量**
+1. 使用`ping()`函數發送超音波並接收回波
+2. 將回波時間除以58轉換為公分距離
 
-1. 感測器發送超音波：通過TrigPin發送10微秒的觸發信號
+**LED亮度控制**
+1. 使用`map()`函數進行距離到亮度的轉換：
+   - 距離越近：紅燈越亮（255），綠燈越暗（0）
+   - 距離越遠：紅燈越暗（0），綠燈越亮（255）
 
-2. 等待回波：
-   - 超音波遇到障礙物後反射回來
-   - 通過EchoPin接收回波信號
+2. 使用`constrain()`函數確保亮度在0-255範圍內
 
-3. 距離計算：
-   - 使用公式：距離 = 回波時間 / 58
-   - 58這個係數是根據聲波速度（340m/s）計算得出
+## 效果展示
+- **近距離**（5cm）：
+  - 紅燈最亮（255）
+  - 綠燈熄滅（0）
 
-## 注意事項
+- **遠距離**（100cm）：
+  - 紅燈熄滅（0）
+  - 綠燈最亮（255）
 
-- 程式每100毫秒測量一次距離
-- 距離單位為公分（cm）
-- 測量結果會通過串口監視器顯示
+- **中間距離**：
+  - 兩個LED呈現漸變效果
+  - 亮度根據距離比例變化
+
