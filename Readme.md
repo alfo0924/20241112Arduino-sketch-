@@ -238,8 +238,7 @@ void loop() {
    - 確認供電電壓是否穩定
    - 檢查上拉電阻是否正確
 
-
-# # sketch_nov12c.ino 
+ # sketch_nov12c.ino 
 
 ### install liquidCrystal i2c
 
