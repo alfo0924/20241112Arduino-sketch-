@@ -121,4 +121,40 @@ map(distance, 5, 100, 255, 0)
 ###  install DHT sensor library ver:1.4.6
 ###  install DHT sensor library for ESPx ver:1.19.0
 
+這兩個是用於Arduino開發環境的DHT溫濕度感測器函式庫：
+
+## DHT sensor library (版本1.4.6)
+
+這是Adafruit開發的標準DHT函式庫：
+- 支援DHT11、DHT22（AM2302）等溫濕度感測器
+- 適用於一般Arduino開發板
+- 提供基本的溫度和濕度讀取功能
+- 是最常用且穩定的DHT函式庫[1]
+
+## DHT sensor library for ESPx (版本1.19.0)
+
+這是專門為ESP32/ESP8266優化的DHT函式庫：
+- 特別針對ESP系列微控制器優化
+- 提供更好的ESP32相容性
+- 修正了負溫度讀取的問題
+- 提供更多進階功能[3][5]
+
+## 主要差異
+
+**功能比較**：
+- 標準版：基本溫濕度讀取
+- ESP版：額外提供：
+  - 自動感測器類型檢測
+  - 更精確的計時控制
+  - 更好的錯誤處理
+
+**使用場景**：
+- 使用Arduino開發板：選擇標準版（1.4.6）
+- 使用ESP32/ESP8266：建議使用ESP版（1.19.0）
+
+**安裝方式**：
+- 兩個函式庫都可以通過Arduino IDE的程式庫管理員安裝
+- ESP版需要搜尋"DHT ESP"
+- 標準版搜尋"DHT sensor library"
+
 
